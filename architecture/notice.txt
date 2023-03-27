@@ -1,0 +1,2 @@
+notice doc do not support chinese blank block  
+loopnz 将cx减一！！ 是固定的，所以必须用cx作为计数。。。
