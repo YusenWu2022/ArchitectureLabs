@@ -1,35 +1,6 @@
 DATA SEGMENT
-    ;upper capital words reserve for use
-    A     DB 'Apple $'
-    B     DB 'Banana $'
-    C     DB 'Cake $'
-    D     DB 'Dessert $'
-    E     DB 'Egg $'
-    F     DB 'Fig $'
-    G     DB 'Grape $'
-    H     DB 'Honey $'
-    I     DB 'Icecream $'
-    J     DB 'Juice $'
-    K     DB 'Kiwi $'
-    L     DB 'Lemon $'
-    M     DB 'Mango $'
-    N     DB 'Nut $'
-    O     DB 'Orange $'
-    P     DB 'Peach $'
-    Q     DB 'Quarenden $'
-    R     DB 'Radish $'
-    S     DB 'Strawberry $'
-    T     DB 'Tangerine $'
-    U     DB 'Udon $'
-    V     DB 'Veal $'
-    W     DB 'Watermelon $'
-    X     DB 'Xacuti $'
-    Y     DB 'Yam $'
-    Z     DB 'Zucchini $'
-    ; index for upper
-    UPPER DW A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
 
-    ; lower capital words storage
+    ; lower capital words storage--in fact upper version shares the same except the first character
     _a    DB 'pple $'
     _b    DB 'anana $'
     _c    DB 'ake $'
@@ -80,19 +51,19 @@ DATA SEGMENT
 DATA ENDS
 
 ; stack: use ? to fill in, and reserve 50
-STACK SEGMENT stack
-    BASE  DB  50 DUP(?)
-    TOP   EQU LENGTH BASE
-STACK ENDS
+STACK1 SEGMENT STACK
+    BASE   DB  50 DUP(?)
+    TOP    EQU LENGTH BASE
+STACK1 ENDS
 
 ; code 
 CODE SEGMENT
     ; move code data and stack segment into target assume
-                  ASSUME CS:CODE, DS:DATA, SS:STACK
+                  ASSUME CS:CODE, DS:DATA, SS:STACK1
     BEGIN:        
                   MOV    AX, DATA
                   MOV    DS, AX
-                  MOV    AX, STACK
+                  MOV    AX, STACK1
                   MOV    SS, AX
                   MOV    AX, TOP
                   MOV    SP, AX
@@ -134,13 +105,13 @@ CODE SEGMENT
     
     PRINTUPPER:   
                 
-                  MOV    DX, BX
+                  MOV    DX, 'BX'
                   MOV    AH, 02H
                   INT    21H
                   SUB    BL, 'A'
                   SHL    BL, 1
                   MOV    SI, BX
-                  MOV    DX, UPPER[SI]
+                  MOV    DX, LOWER[SI]
                   JMP    SHORT PRINT
 
     PRINTLOWER:   
